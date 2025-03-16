@@ -1,83 +1,97 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, TrainingArguments, Trainer
-from datasets import load_dataset
 import torch
-import evaluate  
+import pandas as pd
+from datasets import Dataset
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer
+)
+import evaluate
+import numpy as np
 
-dataset = load_dataset("ninadn/indian-legal")
 
-train_dataset = dataset["train"]
-eval_dataset = dataset["test"]  
+# Load Pretrained Model & Tokenizer (InLegalBERT)
+model_name = "law-ai/InLegalBERT"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=2)
 
-tokenizer = AutoTokenizer.from_pretrained("law-ai/InLegalBERT")  
+# Load Dataset (CSV with 'text' and 'label' columns)
+df = pd.read_csv("/home/aswin/Documents/GitHub/legal-text-summarizer/python_folder/datasets/processed_dataset.csv")  # Change path accordingly
 
-def preprocess_function(examples):
-    inputs = ["summarize: " + doc for doc in examples["Text"]]
-    model_inputs = tokenizer(inputs, max_length=512, truncation=True)
+# Convert to Hugging Face Dataset
+dataset = Dataset.from_pandas(df)
 
-    model_output = tokenizer.batch_encode_plus(examples["Summary"], max_length=150, truncation=True)
-    model_inputs["labels"] = model_output["input_ids"]
-    return model_inputs
+# Tokenization Function
+def tokenize_function(examples):
+    return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=512)
 
-tokenized_train_dataset = train_dataset.map(preprocess_function, batched=True)
-tokenized_eval_dataset = eval_dataset.map(preprocess_function, batched=True)
+# Tokenize the Dataset
+tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
-model = AutoModelForSeq2SeqLM.from_pretrained("t5-small") 
+# Split Dataset (90% Train, 10% Validation)
+split_dataset = tokenized_dataset.train_test_split(test_size=0.1)
+train_dataset = split_dataset["train"]
+eval_dataset = split_dataset["test"]
 
+# Load BERTScore Metric
+bertscore = evaluate.load("bertscore")
+
+# Define BERTScore Evaluation Function
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+
+    # Convert logits to predicted token IDs
+    predictions = np.argmax(predictions, axis=1)  # Get highest probability class
+
+    # Convert labels to token IDs (if needed)
+    labels = labels.astype(int)  # Ensure labels are integers
+
+    decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+    
+    results = bertscore.compute(predictions=decoded_preds, references=decoded_labels, lang="en")
+    score = sum(results["f1"]) / len(results["f1"])
+    return {"bert_score": score}
+
+# Define Training Arguments
 training_args = TrainingArguments(
-    output_dir="./fine_tuned_inlegalbert",
-    per_device_train_batch_size=4, 
-    gradient_accumulation_steps=4, 
-    num_train_epochs=3,  
-    learning_rate=5e-5, 
-    warmup_steps=500,
+    output_dir="./fine-tuned-inlegalbert",
+    logging_strategy="steps",  # Log at step intervals
+    logging_steps=100,  # Log loss every 50 steps
+    eval_strategy="epoch",  # Evaluate only per epoch
+    save_strategy="epoch",  # Save only per epoch
+    learning_rate=4e-5,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=8,
+    gradient_accumulation_steps=1,
+    num_train_epochs=3,
     weight_decay=0.01,
-    per_device_eval_batch_size=4, 
-    logging_strategy="steps",
-    logging_steps=500,
-    save_strategy="steps",
-    save_steps=1000,
-    evaluation_strategy="steps",
-    eval_steps=500,
+    save_total_limit=2,
+    max_grad_norm=1.0,
     load_best_model_at_end=True,
-    metric_for_best_model="rouge1", 
-    push_to_hub=False,  
+    metric_for_best_model="bert_score",
+    greater_is_better=True,
+    max_steps=7000
 )
 
 
-rouge = evaluate.load("rouge")
 
-def compute_metrics(eval_pred):
-    predictions = eval_pred.predictions
-    decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
-    labels = eval_pred.label_ids
-    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
-
-    
-    decoded_preds = ["\n".join(sent) for sent in decoded_preds]
-    decoded_labels = ["\n".join(sent) for sent in decoded_labels]
-
-    result = rouge.compute(predictions=decoded_preds, references=decoded_labels)
-    return result
-
-
+# Define Trainer
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_train_dataset,
-    eval_dataset=tokenized_eval_dataset,
-    tokenizer=tokenizer,
-    compute_metrics=compute_metrics,  
+    train_dataset=train_dataset,
+    eval_dataset=eval_dataset,
+    processing_class=tokenizer,
+    compute_metrics=compute_metrics  # Use BERTScore for evaluation
 )
 
-
+# Start Training
 trainer.train()
 
+# Save Fine-Tuned Model
+trainer.save_model("./fine-tuned-inlegalbert")
+tokenizer.save_pretrained("./fine-tuned-inlegalbert")
 
-trainer.save_model("./fine_tuned_inlegalbert")
-
-
-test_dataset = dataset["test"]
-tokenized_test_dataset = test_dataset.map(preprocess_function, batched=True)
-trainer.eval_dataset = tokenized_test_dataset 
-test_results = trainer.evaluate()
-print(test_results)
+print("Fine-Tuning Complete! Model Saved to './fine-tuned-inlegalbert'")
