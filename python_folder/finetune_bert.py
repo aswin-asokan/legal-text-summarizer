@@ -22,7 +22,7 @@ train_texts, val_texts, train_labels, val_labels = train_test_split(df["sentence
                                                                     random_state=42)
 
 # Load tokenizer
-tokenizer = AutoTokenizer.from_pretrained("law-ai/InCaseLawBERT")
+tokenizer = AutoTokenizer.from_pretrained("law-ai/InLegalBERT")
 
 # Tokenize data
 train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=512)
@@ -48,7 +48,7 @@ val_dataset = LegalDataset(val_encodings, val_labels)
 
 # Load model
 num_labels = len(label_map)  # 6 classes (FACTS, ARGUMENT, ANALYSIS, JUDGMENT, STATUTE, O)
-model = AutoModelForSequenceClassification.from_pretrained("law-ai/InCaseLawBERT", num_labels=len(label_map))
+model = AutoModelForSequenceClassification.from_pretrained("law-ai/InLegalBERT", num_labels=len(label_map))
 
 # Load classification metrics
 accuracy = evaluate.load("accuracy")
@@ -76,7 +76,7 @@ def compute_metrics(eval_pred):
 
 # Define training arguments
 training_args = TrainingArguments(
-    output_dir="./bert_caselawbert",
+    output_dir="./bert_inglegal_v2",
     eval_strategy="epoch",
     save_strategy="epoch",
     save_total_limit=5,
@@ -105,5 +105,5 @@ trainer = Trainer(
 trainer.train()
 
 # Save the best model
-model.save_pretrained("./bert_caselawbert")
-tokenizer.save_pretrained("./bert_caselawbert")
+model.save_pretrained("./bert_inglegal_v2")
+tokenizer.save_pretrained("./bert_inglegal_v2")
