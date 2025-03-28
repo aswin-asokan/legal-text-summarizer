@@ -7,9 +7,8 @@ import numpy as np
 
 # Define label mapping
 label_map = {"FACTS": 0, "ARGUMENT": 1, "ANALYSIS": 2, "JUDGMENT": 3, "STATUTE": 4, "O": 5}
-id_to_label = {v: k for k, v in label_map.items()}  # Reverse mapping
+id_to_label = {v: k for k, v in label_map.items()} 
 
-# Load dataset
 df = pd.read_csv("/home/aswin/Documents/GitHub/legal-text-summarizer/python_folder/datasets/balanced_data.csv")
 
 # Convert text labels to numerical IDs
@@ -21,8 +20,7 @@ train_texts, val_texts, train_labels, val_labels = train_test_split(df["sentence
                                                                     test_size=0.1,
                                                                     random_state=42)
 
-# Load tokenizer
-tokenizer = AutoTokenizer.from_pretrained("law-ai/InLegalBERT")
+tokenizer = AutoTokenizer.from_pretrained("law-ai/InCaseLawBERT")
 
 # Tokenize data
 train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=512)
@@ -42,15 +40,12 @@ class LegalDataset(torch.utils.data.Dataset):
         item["labels"] = torch.tensor(self.labels[idx])
         return item
 
-# Create datasets
 train_dataset = LegalDataset(train_encodings, train_labels)
 val_dataset = LegalDataset(val_encodings, val_labels)
 
-# Load model
-num_labels = len(label_map)  # 6 classes (FACTS, ARGUMENT, ANALYSIS, JUDGMENT, STATUTE, O)
-model = AutoModelForSequenceClassification.from_pretrained("law-ai/InLegalBERT", num_labels=len(label_map))
+num_labels = len(label_map)  
+model = AutoModelForSequenceClassification.from_pretrained("law-ai/InCaseLawBERT", num_labels=len(label_map))
 
-# Load classification metrics
 accuracy = evaluate.load("accuracy")
 precision = evaluate.load("precision")
 recall = evaluate.load("recall")
@@ -60,8 +55,6 @@ f1 = evaluate.load("f1")
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
     predictions = np.argmax(logits, axis=-1)
-
-    # Compute classification metrics
     accuracy_results = accuracy.compute(predictions=predictions, references=labels)
     precision_results = precision.compute(predictions=predictions, references=labels, average="weighted", zero_division=0)
     recall_results = recall.compute(predictions=predictions, references=labels, average="weighted")
@@ -74,9 +67,8 @@ def compute_metrics(eval_pred):
         "f1": f1_results["f1"],
     }
 
-# Define training arguments
 training_args = TrainingArguments(
-    output_dir="./bert_inglegal_v2",
+    output_dir="./bert_caselawbert",
     eval_strategy="epoch",
     save_strategy="epoch",
     save_total_limit=5,
@@ -92,7 +84,6 @@ training_args = TrainingArguments(
     greater_is_better=True,
 )
 
-# Initialize Trainer
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -101,9 +92,8 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
 )
 
-# Train the model
 trainer.train()
 
-# Save the best model
-model.save_pretrained("./bert_inglegal_v2")
-tokenizer.save_pretrained("./bert_inglegal_v2")
+
+model.save_pretrained("./bert_caselawbert")
+tokenizer.save_pretrained("./bert_caselawbert")
