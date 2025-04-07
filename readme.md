@@ -36,4 +36,6 @@ A Gemini-powered chatbot allows users to:
 - Ask questions about the summary.
 - Query legal matters conversationally.
 
-![App flow](https://aswin-asokan.github.io/legal-text-summarizer/images/app_flow.png)
+![app_flow](https://github.com/user-attachments/assets/934b7815-3052-45a5-95a8-778b528a3993)
+
+
