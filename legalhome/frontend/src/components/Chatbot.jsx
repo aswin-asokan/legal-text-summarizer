@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import "./Chatbot.css";
 
 const Chatbot = () => {
@@ -6,52 +7,96 @@ const Chatbot = () => {
     { text: "Hello! How can I help you today?", sender: "bot" },
   ]);
   const [userInput, setUserInput] = useState("");
+  const messagesEndRef = useRef(null);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const recognition = useRef(null);
 
-  // Define the bot's responses
-  const botResponses = {
-    "hi": "Hello! How can I assist you?",
-    "how are you?": "I'm just a bot, but I'm doing great! How about you?",
-    "what is your name?": "I am a chatbot, here to help you!",
-    "bye": "Goodbye! Have a great day!",
+  useEffect(() => {
+    try {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognition.current = new SpeechRecognition();
+        recognition.current.lang = "en-US";
+        recognition.current.continuous = false;
+        recognition.current.interimResults = false;
+
+        recognition.current.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          setUserInput(transcript);
+        };
+
+        recognition.current.onerror = (event) => {
+          console.error("Speech recognition error:", event.error);
+          addBotMessage("Sorry, I couldn't understand your voice.");
+        };
+      }
+    } catch (error) {
+      console.error("Speech recognition not supported:", error);
+      addBotMessage("Voice input is not supported in your browser");
+    }
+
+    return () => {
+      if (recognition.current) recognition.current.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (shouldScroll) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setShouldScroll(false);
+    }
+  }, [shouldScroll]);
+
+  const addBotMessage = (text) => {
+    setMessages((prev) => [...prev, { text, sender: "bot" }]);
+    setShouldScroll(true);
   };
 
-  // Initialize Speech Recognition API
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-
-  recognition.lang = "en-US";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  // Handle speech result
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    setUserInput(transcript); // Set the transcribed text to input
+  const replaceLastBotMessage = (text) => {
+    setMessages((prev) => {
+      const updated = [...prev];
+      const lastIndex = updated.length - 1;
+      if (updated[lastIndex].sender === "bot" && updated[lastIndex].text === "Typing...") {
+        updated[lastIndex] = { text, sender: "bot" };
+      } else {
+        updated.push({ text, sender: "bot" });
+      }
+      return updated;
+    });
+    setShouldScroll(true);
   };
 
-  // Handle errors for speech recognition
-  recognition.onerror = (event) => {
-    console.error("Speech recognition error: ", event.error);
-  };
-
-  // Start listening for voice input
   const handleStartListening = () => {
-    recognition.start();
-    console.log("Microphone is listening...");
+    try {
+      if (recognition.current) {
+        recognition.current.start();
+        addBotMessage("Listening...");
+      }
+    } catch (error) {
+      console.error("Error starting speech recognition:", error);
+      addBotMessage("Voice input is not supported in your browser");
+    }
   };
 
-  const handleSendMessage = (event) => {
-    event.preventDefault();
-
-    const input = userInput.trim().toLowerCase(); // Normalize input
-
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    const input = userInput.trim();
     if (input) {
-      const newMessages = [...messages, { text: userInput, sender: "user" }];
-      const botReply = botResponses[input] || "Sorry, I didn't understand that."; // Default response
-      newMessages.push({ text: botReply, sender: "bot" });
+      setMessages((prev) => [...prev, { text: input, sender: "user" }]);
+      setUserInput(""); // ✅ Clear input immediately
+      addBotMessage("Typing..."); // 💬 Typing indicator
 
-      setMessages(newMessages);
-      setUserInput("");
+      try {
+        const response = await axios.post("http://localhost:8000/chatbot/", {
+          query: input,
+        });
+
+        replaceLastBotMessage(response.data.response || "Sorry, I couldn't understand.");
+      } catch (error) {
+        console.error("Error fetching response:", error);
+        replaceLastBotMessage("There was an error. Please try again.");
+      }
     }
   };
 
@@ -67,6 +112,7 @@ const Chatbot = () => {
             {msg.text}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <div className="input">
         <form onSubmit={handleSendMessage}>
@@ -78,14 +124,15 @@ const Chatbot = () => {
           />
           {userInput.trim() === "" ? (
             <button
-              className="voice-btn"
               type="button"
+              className="voice-btn"
               onClick={handleStartListening}
+              aria-label="Start voice input"
             >
               <i className="fas fa-microphone"></i>
             </button>
           ) : (
-            <button className="send-btn" type="submit">
+            <button type="submit" className="send-btn" aria-label="Send message">
               <i className="fas fa-paper-plane"></i>
             </button>
           )}
