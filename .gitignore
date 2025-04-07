@@ -2,3 +2,5 @@
 python_folder/indian-law-dataset/
 python_folder/bert_caselawbert
 legalhome/frontend/node_modules
+legalhome/__pycache__
+legalhome/.env
