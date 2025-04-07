@@ -3,7 +3,7 @@
 ## 📚 Table of Contents
 
 - [📌 Description](#-description)
-- [🏗️ Architecture](#️-architecture)
+- [🏗️ Architecture](#-architecture)
 - [📊 Test Evaluation](#-test-evaluation)
 - [💬 Features](#-features)
 - [📷 Screenshots](#-screenshots)
