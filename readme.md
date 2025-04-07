@@ -1,5 +1,17 @@
 # 🧾 Indian Legal Text Summarizer using BERT
 
+## 📚 Table of Contents
+
+- [📌 Description](#-description)
+- [🏗️ Architecture](#️-architecture)
+- [📊 Test Evaluation](#-test-evaluation)
+- [💬 Features](#-features)
+- [📷 Screenshots](#-screenshots)
+- [🚀 Installation & Usage](#-installation--usage)
+- [📚 Citation](#-citation)
+  - [🧠 Model: InCaseLawBERT](#-model-incaselawbert)
+  - [📂 Dataset: Legal Case Document Summarization](#-dataset-legal-case-document-summarization)
+
 ### 📌 Description
 
 Indian Legal Text Summarizer is a powerful tool designed to simplify and summarize long and complex Indian legal documents. It’s especially useful for:
