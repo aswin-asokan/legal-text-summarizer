@@ -57,6 +57,8 @@ A Gemini-powered chatbot allows users to:
 - 🔄 Steps/Second: 0.915
 - 💡 Final Training Loss: 0.2268
 - 📈 Total Epochs: 5
+  
+<img src="https://github.com/user-attachments/assets/33bea8b9-934a-4aad-b575-4b47443fbb28" height=350>
 
 ---
 
@@ -71,6 +73,14 @@ A Gemini-powered chatbot allows users to:
 ---
 
 ### 📷 Screenshots
+
+| 🏠 Home | 📄 Summary Page 1 |
+|--------|-------------------|
+| ![home](https://github.com/user-attachments/assets/4b84df81-3884-4bd2-94c7-4315f6d81b9f) | ![summary1](https://github.com/user-attachments/assets/c90abbb8-c5cf-415a-bfd8-68fc60fb0b1e) |
+
+| 📄 Summary Page 2 | 💬 Chatbot |
+|------------------|------------|
+| ![summary2](https://github.com/user-attachments/assets/3447f53d-fa96-4de8-a256-35785c7950b4) | ![chatbot](https://github.com/user-attachments/assets/72d3cef5-b3f3-416b-85b0-fccaa0a95594) |
 
 ---
 
@@ -152,7 +162,7 @@ npm run dev
 ```
 
 Your application should now be up and running with both frontend and backend connected!
-
+Sample input files are provided on <span style="color:green">sample_input</span> folder, two of them are judgements from court and one is a non legal document.
 ---
 
 ## 📚 Citation
