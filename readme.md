@@ -3,7 +3,7 @@
 ## 📚 Table of Contents
 
 - [📌 Description](#-description)
-- [🏗️ Architecture](#-architecture)
+- [🏗️ Architecture](https://github.com/aswin-asokan/legal-text-summarizer/edit/main/readme.md#%EF%B8%8F-architecture)
 - [📊 Test Evaluation](#-test-evaluation)
 - [💬 Features](#-features)
 - [📷 Screenshots](#-screenshots)
