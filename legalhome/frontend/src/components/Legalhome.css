@@ -1,0 +1,149 @@
+.home-container {
+  width: -webkit-fill-available;
+  height: 100vh;
+  text-align: center;
+  background: white;
+  color: black;
+
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: auto;
+  gap: 2rem;
+}
+
+.hero-text {
+  flex: 1;
+  text-align: left;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  opacity: 0.9;
+}
+
+/* Hero Image */
+.hero-image {
+  padding-top: 28px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  perspective: 1000px; /* Adds 3D depth effect */
+}
+
+.flip-container {
+  width: 250px;  /* Ensure proper sizing */
+  height: 250px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;  /* Ensures only one side is visible */
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.front img, .back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures full image is displayed inside the circle */
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+
+/* Features Section */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  flex: 1;
+  max-width: 300px;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+}
+
+.cta-button {
+  background: linear-gradient(90deg, #ff8c00, #ff4500); /* Gradient effect */
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
+}
+
+/* Hover Effect */
+.cta-button:hover {
+  background: linear-gradient(90deg, #ff4500, #ff8c00);
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(255, 69, 0, 0.5);
+}
+
+/* Button Press (Click) Effect */
+.cta-button:active {
+  transform: scale(0.95);
+}
+
+/* Focus State for Accessibility */
+.cta-button:focus {
+  outline: 2px solid #ff8c00;
+  outline-offset: 2px;
+}
+
+/* Disabled State */
+.cta-button:disabled {
+  background: linear-gradient(90deg, #ccc, #999);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cta-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  .features {
+      flex-direction: column;
+      align-items: center;
+    }
+}

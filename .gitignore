@@ -1,3 +1,4 @@
-python_folder/.venv/
-python_folder/pyenv/
+.venv/
 python_folder/indian-law-dataset/
+python_folder/bert_caselawbert
+legalhome/frontend/node_modules

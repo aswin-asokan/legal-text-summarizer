@@ -1,0 +1,23 @@
+/* Ensure the body and html take up full height */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Disable default scrolling */
+}
+
+/* Full-height sections */
+.App {
+  height: 100vh;
+  overflow-y: scroll; /* Enable vertical scrolling */
+  scroll-snap-type: y mandatory; /* Snap to sections */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+/* Each page takes up the full viewport height */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white; /* Optional: Add borders for visual separation */
+}
