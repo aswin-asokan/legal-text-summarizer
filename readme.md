@@ -12,6 +12,8 @@
   - [🧠 Model: InCaseLawBERT](#-model-incaselawbert)
   - [📂 Dataset: Legal Case Document Summarization](#-dataset-legal-case-document-summarization)
 
+---
+
 ### 📌 Description
 
 Indian Legal Text Summarizer is a powerful tool designed to simplify and summarize long and complex Indian legal documents. It’s especially useful for:
