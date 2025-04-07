@@ -175,6 +175,7 @@ npm run dev
 
 Your application should now be up and running with both frontend and backend connected!
 Sample input files are provided on <span style="color:green">sample_input</span> folder, two of them are judgements from court and one is a non legal document.
+
 ---
 
 ## 📚 Citation
