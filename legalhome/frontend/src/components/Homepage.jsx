@@ -7,7 +7,7 @@ const Homepage = () => {
   const [file, setFile] = useState(null);
   const [textContent, setTextContent] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // New state for loading
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -38,7 +38,8 @@ const Homepage = () => {
       return;
     }
 
-    setLoading(true); // Show loading state
+    setLoading(true);
+    setTextContent(""); // Clear previous content when new upload starts
 
     const formData = new FormData();
     formData.append("file", file);
@@ -54,11 +55,10 @@ const Homepage = () => {
       setError("Failed to convert PDF to text. Please try again.");
       setTextContent("");
     } finally {
-      setLoading(false); // Hide loading button after request completes
+      setLoading(false);
     }
   };
 
-  // Function to scroll to the Chatbot section
   const scrollToChatbot = () => {
     const chatbotSection = document.getElementById("chatbot");
     if (chatbotSection) {
@@ -68,30 +68,17 @@ const Homepage = () => {
 
   return (
     <div className="homepage" style={{ textAlign: "center", marginTop: "50px", position: "relative", minHeight: "100vh" }}>
-      {/* Floating Chatbot Icon - Scroll to Chatbot Section */}
-      <button
-        onClick={scrollToChatbot}
-        style={{
-          position: "absolute",
-          bottom: "57px",
-          right: "30px",
-          zIndex: 1000,
-          backgroundColor: "#00aaa5",
-          borderRadius: "50%",
-          padding: "15px",
-          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          transition: "transform 0.3s ease",
-          border: "none",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-      >
-        <FaCommentDots style={{ color: "white", fontSize: "28px" }} />
-      </button>
+      {/* Floating Chatbot Icon - Only visible when there's no text content */}
+      {!textContent && (
+        <button 
+          className="chatButton"
+          onClick={scrollToChatbot}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          <FaCommentDots style={{ color: "white", fontSize: "28px" }} />
+        </button>
+      )}
 
       {/* PDF to Text Converter Content */}
       <h1>Legal Text Summarizer</h1>
@@ -133,7 +120,6 @@ const Homepage = () => {
       {file && <p>Selected file: {file.name}</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Upload Button with Loading Effect */}
       <button
         onClick={handleUpload}
         disabled={loading}
@@ -150,28 +136,22 @@ const Homepage = () => {
         {loading ? "Uploading..." : "Upload"}
       </button>
 
-      {/* Show Extracted Text After Loading Completes */}
-      {textContent && !loading && (
-        <div
-          style={{
-            margin: "20px auto",
-            textAlign: "justify",
-            padding: "20px",
-            border: "1px solid #ddd",
-            borderRadius: "10px",
-            backgroundColor: "#fff",
-          }}
-        >
-          <h2>Summary :</h2>
-          <p>{textContent.split("\n").map((line, index) => (
-  <React.Fragment key={index}>
-    {line}
-    <br />
-  </React.Fragment>
-))}</p>
+      { textContent && !loading && (
+  <div
+    style={{
+      margin: "20px auto",
+      textAlign: "justify",
+      padding: "20px",
+      border: "1px solid #ddd",
+      borderRadius: "5px",
+      backgroundColor: "#fff",
+    }}
+  >
+    <h2>Summary:</h2>
+    <p dangerouslySetInnerHTML={{ __html: textContent.replace(/\n/g, "<br />") }} />
+  </div>
+)}
 
-        </div>
-      )}
     </div>
   );
 };
