@@ -3,13 +3,14 @@
 ## 📚 Table of Contents
 
 - [📌 Description](#-description)
-- [🏗️ Architecture](#️-architecture)
+- [🚧 Architecture](#-architecture)
 - [📊 Test Evaluation](#-test-evaluation)
 - [💬 Features](#-features)
 - [📷 Screenshots](#-screenshots)
 - [🚀 Installation & Usage](#-installation--usage)
 - [📚 Citation](#-citation)
   - [🧠 Model: InCaseLawBERT](#-model-incaselawbert)
+  - [🧠 Paraphrase Model: chatgpt paraphraser on T5 base](#-paraphrase-model-chatgpt-paraphraser-on-t5-base)
   - [📂 Dataset: Legal Case Document Summarization](#-dataset-legal-case-document-summarization)
 
 ---
@@ -27,12 +28,12 @@ It also includes a chatbot powered by Gemini, allowing users to interact and que
 
 ---
 
-### 🏗️ Architecture
+### 🚧 Architecture
 
-**1. PDF Parsing**
+**1. PDF Parsing**   
 Users can upload legal documents in PDF format, which are then processed using PyPDF2 to extract the raw textual content.
 
-**2. Content Labeling**
+**2. Content Labeling**   
 The extracted text is analyzed using a fine-tuned InCaseLaw BERT model that categorizes sentences into the following sections:
 
 - FACTS
@@ -41,16 +42,16 @@ The extracted text is analyzed using a fine-tuned InCaseLaw BERT model that cate
 - ANALYSIS
 - STATUTES
 
-**3. Summarization & Paraphrasing**
+**3. Summarization & Paraphrasing**   
 Each categorized section is paraphrased using the chatgpt_paraphraser_on_T5_base model to enhance clarity and readability while preserving the original meaning.
 
-**4. Chatbot Integration**  
+**4. Chatbot Integration**   
 A Gemini-powered chatbot is integrated to enable users to:
 
 - Ask contextual questions based on the generated summary.
 - Engage in natural, conversational queries regarding legal matters.
 
-![app_flow](https://github.com/user-attachments/assets/934b7815-3052-45a5-95a8-778b528a3993)
+![app_flow](https://github.com/user-attachments/assets/91276ba3-8fbb-4ed6-ad63-b64ec061ea18)
 
 ---
 
@@ -71,7 +72,7 @@ A Gemini-powered chatbot is integrated to enable users to:
 - 🔄 Steps/Second: 0.915
 - 💡 Final Training Loss: 0.2268
 - 📈 Total Epochs: 5
-
+  
 <img src="https://github.com/user-attachments/assets/33bea8b9-934a-4aad-b575-4b47443fbb28" height=350>
 
 ---
@@ -80,7 +81,6 @@ A Gemini-powered chatbot is integrated to enable users to:
 
 - ✅ Accurate summarization of legal documents
 - ✅ Section-wise breakdown (Facts, Arguments, etc.)
-- ✅ Grammar-corrected summaries
 - ✅ Gemini-powered chatbot for interactive queries
 - ✅ Designed for real-world legal use cases
 
@@ -156,18 +156,25 @@ python case_summary.py
 **5. Configure Gemini API for chatbot support**
 Create a **.env** file inside the <span style="color:green">legalhome folder</span> and add your API key:
 
-```bash
+```python
 GENAI_API_KEY=your_api_key_here
 ```
 
-**6. Run the backend API**
+**6. Update model path**   
+In <span style="color:green">legalhome/incaselaw.py</span>, change the model path according to your directory.
+```python
+# Change model path before running
+model_path = "/home/aswin/Documents/GitHub/legal-text-summarizer/python_folder/bert_caselawbert"
+```
+
+**7. Run the backend API**
 In the <span style="color:green">legalhome folder</span> directory, start the backend server:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-**7. Run the frontend (in a split terminal)**
+**8. Run the frontend (in a split terminal)**
 Navigate to the <span style="color:green">frontend</span> folder:
 
 ```bash
@@ -200,6 +207,16 @@ _Proceedings of the 19th International Conference on Artificial Intelligence and
   year = {2023},
 }
 ```
+### 🧠 Paraphrase Model: Chatgpt Paraphraser on T5 Base 
+
+```bibtext
+@inproceedings{chatgpt_paraphraser,
+  author={Vladimir Vorobev, Maxim Kuznetsov},
+  title={A paraphrasing model based on ChatGPT paraphrases},
+  year={2023}
+}
+
+```
 
 ### 📂 Dataset: Legal Case Document Summarization
 
@@ -209,3 +226,8 @@ _Proceedings of the 19th International Conference on Artificial Intelligence and
 > _Legal Case Document Summarization: Extractive and Abstractive Methods and their Evaluation_ [Data set].  
 > The 2nd Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics and the 12th International Joint Conference on Natural Language Processing (AACL-IJCNLP).  
 > [🔗 Zenodo](https://zenodo.org/records/7152317)
+
+---
+
+**NOTE:**   
+> While the current model demonstrates promising results, it is not without limitations—such as occasionally omitting statutes or articles during tokenization. Further fine-tuning with a larger and more diverse dataset is recommended to enhance its reliability and performance.
