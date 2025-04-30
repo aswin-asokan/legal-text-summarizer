@@ -210,7 +210,8 @@ _Proceedings of the 19th International Conference on Artificial Intelligence and
   year = {2023},
 }
 ```
-### 🧠 Paraphrase Model: Chatgpt Paraphraser on T5 Base 
+### 🧠 Paraphrase Model: Chatgpt Paraphraser on T5 Base   
+[🤗 Hugging Face Model]([https://huggingface.co/law-ai/InCaseLawBERT](https://huggingface.co/humarin/chatgpt_paraphraser_on_T5_base))
 
 ```bibtext
 @inproceedings{chatgpt_paraphraser,
