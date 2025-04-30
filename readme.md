@@ -19,7 +19,7 @@
 
 ### 📌 Description
 
-Nyaytra – Guiding Justice with Intelligence – is an intelligent legal assistant built to simplify and summarize lengthy Indian legal documents using state-of-the-art NLP models.   
+Nyaytra (न्याय + यंत्र) means Machine of Justice. It is an intelligent legal assistant built to simplify and summarize lengthy Indian legal documents using state-of-the-art NLP models.   
 Ideal for:
 
 - 🧑‍⚖️ Legal Advisors
