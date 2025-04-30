@@ -1,4 +1,6 @@
-# 🧾 Indian Legal Text Summarizer using BERT
+# 🧾 Nyaytra – Guiding Justice with Intelligence
+### Indian Legal Text Summarizer using BERT
+![image (1)](https://github.com/user-attachments/assets/d152e230-9351-4ae1-a2b8-4d51903aeba1)
 
 ## 📚 Table of Contents
 
@@ -17,14 +19,15 @@
 
 ### 📌 Description
 
-Indian Legal Text Summarizer is a powerful tool designed to simplify and summarize long and complex Indian legal documents. It’s especially useful for:
+Nyaytra – Guiding Justice with Intelligence – is an intelligent legal assistant built to simplify and summarize lengthy Indian legal documents using state-of-the-art NLP models.   
+Ideal for:
 
 - 🧑‍⚖️ Legal Advisors
 - 👨‍💼 Lawyers
 - 📚 Law Students
 - 🧠 Curious Individuals interested in legal understanding
 
-It also includes a chatbot powered by Gemini, allowing users to interact and query the summarized content or general legal knowledge in a conversational way.
+With section-wise summaries and an integrated Gemini-powered chatbot, users can effortlessly navigate complex case details and query legal information conversationally.
 
 ---
 
@@ -230,4 +233,4 @@ _Proceedings of the 19th International Conference on Artificial Intelligence and
 ---
 
 **NOTE:**   
-> While the current model demonstrates promising results, it is not without limitations—such as occasionally omitting statutes or articles during tokenization. Further fine-tuning with a larger and more diverse dataset is recommended to enhance its reliability and performance.
+> While Nyaytra demonstrates promising results, it still has limitations—such as occasional omission of statutes or legal articles during tokenization. Further fine-tuning with more diverse and representative legal datasets is advised to enhance its robustness and accuracy.
