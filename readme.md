@@ -3,7 +3,7 @@
 ## 📚 Table of Contents
 
 - [📌 Description](#-description)
-- [🏗️ Architecture](#%EF%B8%8F-architecture)
+- [🏗️ Architecture](#️-architecture)
 - [📊 Test Evaluation](#-test-evaluation)
 - [💬 Features](#-features)
 - [📷 Screenshots](#-screenshots)
@@ -30,10 +30,10 @@ It also includes a chatbot powered by Gemini, allowing users to interact and que
 ### 🏗️ Architecture
 
 **1. PDF Parsing**
-Documents are uploaded and parsed using PyPDF2 to extract raw text.
+Users can upload legal documents in PDF format, which are then processed using PyPDF2 to extract the raw textual content.
 
 **2. Content Labeling**
-The extracted text is passed through a fine-tuned InCaseLaw BERT model, which labels the content into:
+The extracted text is analyzed using a fine-tuned InCaseLaw BERT model that categorizes sentences into the following sections:
 
 - FACTS
 - ARGUMENTS
@@ -41,14 +41,14 @@ The extracted text is passed through a fine-tuned InCaseLaw BERT model, which la
 - ANALYSIS
 - STATUTES
 
-**3. Summarization & Grammar Correction**
-Labeled content is summarized and passed to a T5 model to ensure grammatically correct output.
+**3. Summarization & Paraphrasing**
+Each categorized section is paraphrased using the chatgpt_paraphraser_on_T5_base model to enhance clarity and readability while preserving the original meaning.
 
-**4. Chatbot Integration**
-A Gemini-powered chatbot allows users to:
+**4. Chatbot Integration**  
+A Gemini-powered chatbot is integrated to enable users to:
 
-- Ask questions about the summary.
-- Query legal matters conversationally.
+- Ask contextual questions based on the generated summary.
+- Engage in natural, conversational queries regarding legal matters.
 
 ![app_flow](https://github.com/user-attachments/assets/934b7815-3052-45a5-95a8-778b528a3993)
 
@@ -71,7 +71,7 @@ A Gemini-powered chatbot allows users to:
 - 🔄 Steps/Second: 0.915
 - 💡 Final Training Loss: 0.2268
 - 📈 Total Epochs: 5
-  
+
 <img src="https://github.com/user-attachments/assets/33bea8b9-934a-4aad-b575-4b47443fbb28" height=350>
 
 ---
@@ -88,12 +88,12 @@ A Gemini-powered chatbot allows users to:
 
 ### 📷 Screenshots
 
-| 🏠 Home | 📄 Summary Page 1 |
-|--------|-------------------|
+| 🏠 Home                                                                                  | 📄 Summary Page 1                                                                            |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | ![home](https://github.com/user-attachments/assets/4b84df81-3884-4bd2-94c7-4315f6d81b9f) | ![summary1](https://github.com/user-attachments/assets/c90abbb8-c5cf-415a-bfd8-68fc60fb0b1e) |
 
-| 📄 Summary Page 2 | 💬 Chatbot |
-|------------------|------------|
+| 📄 Summary Page 2                                                                            | 💬 Chatbot                                                                                  |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | ![summary2](https://github.com/user-attachments/assets/3447f53d-fa96-4de8-a256-35785c7950b4) | ![chatbot](https://github.com/user-attachments/assets/72d3cef5-b3f3-416b-85b0-fccaa0a95594) |
 
 ---

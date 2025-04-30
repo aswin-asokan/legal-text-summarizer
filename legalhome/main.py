@@ -19,8 +19,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-load_dotenv()
 # Gemini API setup
+load_dotenv()
 GENAI_API_KEY = os.getenv("GENAI_API_KEY")
 genai.configure(api_key=GENAI_API_KEY)
 model = genai.GenerativeModel("gemini-2.5-pro-exp-03-25")
